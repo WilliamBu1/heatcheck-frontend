@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Landing from './pages/landing'
 import Loginsignup from './pages/login_signup'
 import HomePage from './pages/home_page';
+import NotFoundPage from './pages/NotFoundPage';
 import AppLayout from './layouts/AppLayout';
 import MainLayout from './layouts/MainLayout';
 
@@ -19,6 +20,7 @@ const App = () => {
           <Route element={<AppLayout />}>
             <Route path='/home_page' element={<HomePage />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </MainLayout>
     </BrowserRouter>
