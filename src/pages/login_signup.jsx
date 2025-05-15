@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { signupUser, loginUser } from '../api_calls/authService';
-import { useNavigate } from 'react-router-dom';
+import { signupUser, loginUser } from '../api_calls/authService.js';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const LoginSignupPage = () => {
@@ -138,6 +138,16 @@ const LoginSignupPage = () => {
                 </button>
               </div>
             </form>
+            {isLoginView && (
+              <div className="mt-6 text-center">
+                <Link 
+                  to="/home_page" 
+                  className="font-michroma text-sm text-gray-400 hover:text-gray-200 underline transition-colors duration-300"
+                >
+                  Continue as guest 😒 👎 
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="w-1/2 p-8 flex flex-col items-center">
