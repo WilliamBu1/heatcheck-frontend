@@ -15,8 +15,8 @@ const PlayerStatsCards = ({ players }) => {
           <h2 className="text-xl font-bold text-red-500 mb-2">{player.PLAYER_NAME}</h2>
           <p className="text-gray-400 mb-1">Date: {new Date(player.GAME_DATE).toLocaleDateString()}</p>
           <div className="mt-2 flex items-center">
-            <span className="text-2xl font-bold">{player.PTS_AVG_LAST_5}</span>
-            <span className="ml-2 text-sm text-gray-400">PPG last 5</span>
+            <span className="text-2xl font-bold">{player.PTS_AVG_LAST_5} 🔥</span>
+            <span className="ml-2 text-sm text-gray-400">PPG last 5 games</span>
           </div>
         </div>
       ))}
