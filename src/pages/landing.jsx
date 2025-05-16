@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useAuth } from '../context/AuthContext.jsx'; // Updated import path
 import LebronGif from '../assets/LEBRON.gif'; // Import the GIF
+import logo from '../assets/HCLOGO.png'; // Import the logo
 
 const Landing = () => {
   const [visible, setVisible] = useState(false);
@@ -47,6 +48,11 @@ const Landing = () => {
 
       {/* Content Layer - ensure it's above the overlay */}
       <div className="relative z-20 flex flex-col items-center justify-center min-h-screen text-center p-4">
+        {/* Logo at the top, horizontally centered */}
+        <div className={`absolute top-8 left-1/2 transform -translate-x-1/2 transition-opacity duration-1000 ease-out ${visible ? 'opacity-100' : 'opacity-0'}`}>
+          <img src={logo} alt="HeatCheck Logo" className="h-24 w-auto object-contain" />
+        </div>
+        
         {/* Combined container for title and button, centered on the page */}
         <div className="flex flex-col items-center justify-center w-full">
           <h1 
