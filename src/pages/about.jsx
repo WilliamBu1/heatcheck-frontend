@@ -7,7 +7,7 @@ const About = () => {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-6 text-red-500">What is HeatCheck?</h1>
         <p className="text-lg leading-relaxed text-gray-300 mb-12">
-          HeatCheck allows you to analyze a NBA player's recent performance in the right now! 
+          HeatCheck allows you to analyze a NBA player's recent performance! 
           We currently only support data from the top 3 players from each team. 
           This results in a total of 90 players in our system. 
           We also developed a Machine Learning model to assist in predicting how many 
