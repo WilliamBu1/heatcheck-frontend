@@ -12,12 +12,14 @@ const Navbar = () => {
   };
 
   const guestLinks = [
+    { path: '/home_page', text: 'Home' },
     { path: '/login_signup', text: 'Login' },
     { path: '/feature1_guest', text: 'Search Player' }, // Example placeholder path
     { path: '/about', text: 'About' },
   ];
 
   const userLinks = [
+    { path: '/home_page', text: 'Home' },
     { path: '/feature1_user', text: 'Search Player' },   // Example placeholder path
     { path: '/feature2_user', text: 'Favorites' },   // Example placeholder path 
     { path: '/about', text: 'About' },

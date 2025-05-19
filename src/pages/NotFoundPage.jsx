@@ -20,7 +20,7 @@ const NotFoundPage = () => {
         to={homePath} 
         className="bg-red-700 hover:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-all duration-300 border-2 border-red-900"
       >
-        Go to Homepage
+        Return
       </Link>
     </div>
   );
