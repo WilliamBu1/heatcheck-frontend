@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://heatcheck-backend.onrender.com'; // Or your backend's actual base URL
+const API_BASE_URL = 'https://heatcheck-backend.onrender.com'; // express + mongodb backend
 
 // Function to handle user login
 export const loginUser = async (credentials) => {
