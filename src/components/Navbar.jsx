@@ -25,6 +25,7 @@ const Navbar = () => {
     { path: '/home_page', text: 'Home' },
     { path: '/feature1_user', text: 'Search Player' },
     { path: '/feature2_user', text: 'Favorites' },
+    { path: '/feature3_user', text: 'Predict' },
     { path: '/about', text: 'About' },
   ];
 
@@ -44,15 +45,22 @@ const Navbar = () => {
         />
 
         {/* Desktop Navigation - hidden on mobile */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center">
           {isAuthenticated ? (
             <>
-              {user && <span className="text-gray-300 mr-2">Hi, {user.username}!</span>}
-              {userLinks.map((link) => (
-                <Link key={link.path} to={link.path} className="hover:text-red-500 transition-colors">
-                  {link.text}
-                </Link>
+              {user && <span className="text-gray-300 mr-4">Hi, {user.username}!</span>}
+              {userLinks.map((link, index) => (
+                <React.Fragment key={link.path}>
+                  {index > 0 && <div className="h-4 w-px bg-gray-700 mx-2"></div>}
+                  <Link 
+                    to={link.path} 
+                    className="hover:text-red-500 transition-colors px-2"
+                  >
+                    {link.text}
+                  </Link>
+                </React.Fragment>
               ))}
+              <div className="h-4 w-px bg-gray-700 mx-3"></div>
               <button 
                 onClick={handleLogout}
                 className="bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-3 rounded text-sm transition-all duration-300 border-2 border-red-900"
@@ -62,10 +70,16 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {guestLinks.map((link) => (
-                <Link key={link.path} to={link.path} className="hover:text-red-500 transition-colors">
-                  {link.text}
-                </Link>
+              {guestLinks.map((link, index) => (
+                <React.Fragment key={link.path}>
+                  {index > 0 && <div className="h-4 w-px bg-gray-700 mx-2"></div>}
+                  <Link 
+                    to={link.path} 
+                    className="hover:text-red-500 transition-colors px-2"
+                  >
+                    {link.text}
+                  </Link>
+                </React.Fragment>
               ))}
             </>
           )}
