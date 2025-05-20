@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import SearchBar from '../components/SearchBar';
+import FavSearch from '../components/fav_search';
 import FavoritePlayerCard from '../components/FavoritePlayerCard';
 
 const Favorites = () => {
@@ -62,7 +62,7 @@ const Favorites = () => {
       <h1 className="text-2xl font-bold mb-6">Your Favorite Players</h1>
       
       {/* Search Bar Component */}
-      <SearchBar 
+      <FavSearch 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm} 
         placeholder="Search players..."

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SearchBar = ({ searchTerm, setSearchTerm, placeholder = "Search players..." }) => {
+const FavSearch = ({ searchTerm, setSearchTerm, placeholder = "Search players..." }) => {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -25,4 +25,4 @@ const SearchBar = ({ searchTerm, setSearchTerm, placeholder = "Search players...
   );
 };
 
-export default SearchBar; 
+export default FavSearch; 

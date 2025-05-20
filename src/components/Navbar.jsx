@@ -17,13 +17,13 @@ const Navbar = () => {
   const guestLinks = [
     { path: '/home_page', text: 'Home' },
     { path: '/login_signup', text: 'Login' },
-    { path: '/feature1_guest', text: 'Search Player' },
+    { path: '/search_page', text: 'Search Player' },
     { path: '/about', text: 'About' },
   ];
 
   const userLinks = [
     { path: '/home_page', text: 'Home' },
-    { path: '/feature1_user', text: 'Search Player' },
+    { path: '/search_page', text: 'Search Player' },
     { path: '/favorites', text: 'Favorites' },
     { path: '/feature3_user', text: 'Predict' },
     { path: '/about', text: 'About' },
