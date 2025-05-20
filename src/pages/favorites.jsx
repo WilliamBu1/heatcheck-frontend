@@ -65,7 +65,6 @@ const Favorites = () => {
       <FavSearch 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm} 
-        placeholder="Search players..."
       />
 
       {/* Player cards */}

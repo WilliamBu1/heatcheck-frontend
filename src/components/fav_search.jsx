@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FavSearch = ({ searchTerm, setSearchTerm, placeholder = "Search players..." }) => {
+const FavSearch = ({ searchTerm, setSearchTerm, placeholder = "Search player..." }) => {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };

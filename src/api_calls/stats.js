@@ -9,3 +9,8 @@ export const get5HeatUpPlayers = async () => {
     const response = await fetch(`${API_BASE_URL}/5players_heating_up`);
     return response.json();
 };
+
+export const getPlayerStats = async (playerName) => {
+    const response = await fetch(`${API_BASE_URL}/player_stats?player_name=${playerName}`);
+    return response.json();
+};
