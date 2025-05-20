@@ -59,7 +59,7 @@ const Favorites = () => {
 
   return (
     <div className="min-h-screen bg-black text-white p-4 font-michroma">
-      <h1 className="text-2xl font-bold mb-6">Your Favorite Players</h1>
+      <h1 className="text-2xl font-bold mb-6">Your Favorite Players(mock data rn)</h1>
       
       {/* Search Bar Component */}
       <FavSearch 
