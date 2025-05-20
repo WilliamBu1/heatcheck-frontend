@@ -6,7 +6,7 @@ import Loginsignup from './pages/login_signup'
 import HomePage from './pages/home_page';
 import NotFoundPage from './pages/NotFoundPage';
 import About from './pages/about';
-
+import Favorites from './pages/favorites';
 import AppLayout from './layouts/AppLayout';
 import MainLayout from './layouts/MainLayout';
 
@@ -22,6 +22,7 @@ const App = () => {
           <Route element={<AppLayout />}>
             <Route path='/home_page' element={<HomePage />} />
             <Route path='/about' element={<About />} />
+            <Route path='/favorites' element={<Favorites />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

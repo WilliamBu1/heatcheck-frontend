@@ -24,7 +24,7 @@ const Navbar = () => {
   const userLinks = [
     { path: '/home_page', text: 'Home' },
     { path: '/feature1_user', text: 'Search Player' },
-    { path: '/feature2_user', text: 'Favorites' },
+    { path: '/favorites', text: 'Favorites' },
     { path: '/feature3_user', text: 'Predict' },
     { path: '/about', text: 'About' },
   ];
