@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PlayerSearchAutocomplete from '../components/PlayerSearchAutocomplete';
 import { getPlayerStats } from '../api_calls/stats';
+import PlayerStatsDisplayCard from '../components/PlayerStatsDisplayCard';
 
 const Search_player = () => {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -103,32 +104,53 @@ const Search_player = () => {
 
   const handlePlayerSelect = (player) => {
     setSelectedPlayer(player);
-    // You could fetch additional player data here
+    setPlayerData(null);
+    setError(null);
     console.log(`Selected player: ${player}`);
   };
 
   const handleSearchSubmit = async (searchText) => {
+    if (!searchText || searchText.trim() === '') {
+      setError('Please enter a player name to search.');
+      setPlayerData(null);
+      return;
+    }
     try {
       setIsLoading(true);
       setError(null);
+      setPlayerData(null);
       console.log(`Searching for: ${searchText}`);
-      const playerStats = await getPlayerStats(searchText);
-      console.log('Player stats:', playerStats);
-      setPlayerData(playerStats);
+      const apiResponse = await getPlayerStats(searchText);
+      console.log('API Response:', apiResponse);
+
+      if (apiResponse && typeof apiResponse === 'object' && !apiResponse.error) {
+        setPlayerData(apiResponse);
+      } else if (apiResponse && apiResponse.error) {
+        setError(`Error for ${searchText}: ${apiResponse.error}`);
+        setPlayerData(null);
+      } else {
+        setError(`No stats found for ${searchText} or unexpected data format.`);
+        setPlayerData(null);
+      }
+
     } catch (error) {
       console.error('Error fetching player stats:', error);
-      setError('Failed to fetch player data');
+      setError('Failed to fetch player data. Check the console for details.');
+      setPlayerData(null);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const searchSectionWrapperClass = "w-full max-w-xl mx-auto text-center mb-6";
+  const mainContentWrapperClass = playerData 
+    ? "w-full px-2 sm:px-4" // Full width with slight padding when card is shown
+    : "w-full max-w-2xl mx-auto text-center p-4 md:p-6"; // Centered and max-width when card is not shown
+
   return (
     <div className="min-h-screen bg-black text-white flex flex-col justify-start pt-12">
-      <div className="w-full max-w-xl mx-auto text-center p-6">
+      <div className={searchSectionWrapperClass}>
         <h1 className="text-3xl font-bold font-michroma mb-8">Player Search</h1>
-        
-        {/* Player search with autocomplete */}
         <div className="mb-4">
           <PlayerSearchAutocomplete 
             players={players} 
@@ -136,34 +158,31 @@ const Search_player = () => {
             onSearchSubmit={handleSearchSubmit}
           />
           <p className="mt-3 text-gray-400 text-sm">
-            Start typing to search for an NBA player
+            Start typing to search for an NBA player.
           </p>
         </div>
+      </div>
 
-        {/* Loading indicator */}
+      <div className={mainContentWrapperClass}>
         {isLoading && (
           <div className="mt-8 flex justify-center">
             <div className="animate-spin h-8 w-8 border-4 border-red-500 rounded-full border-t-transparent"></div>
           </div>
         )}
 
-        {/* Error message */}
-        {error && (
-          <div className="mt-8 p-4 bg-red-900/50 border border-red-700 rounded-lg text-white">
-            {error}
+        {error && !isLoading && (
+          <div className="mt-8 p-4 bg-red-900/60 border border-red-700 rounded-lg text-white text-center max-w-md mx-auto">
+            <p className="font-semibold">Search Error:</p>
+            <p>{error}</p>
           </div>
         )}
 
-        {/* Display raw JSON data */}
-        {playerData && !isLoading && (
-          <div className="mt-8 text-left">
-            <h2 className="text-xl font-bold mb-4">API Response:</h2>
-            <div className="bg-gray-900 p-4 rounded-lg overflow-x-auto">
-              <pre className="text-xs text-gray-300 whitespace-pre-wrap">
-                {JSON.stringify(playerData, null, 2)}
-              </pre>
-            </div>
-          </div>
+        {!isLoading && !error && playerData && (
+          <PlayerStatsDisplayCard playerData={playerData} playerName={selectedPlayer} />
+        )}
+        
+        {!isLoading && !error && !playerData && selectedPlayer && (
+           <p className="mt-8 text-gray-500">Click "Go" or press Enter to fetch stats for {selectedPlayer}.</p>
         )}
       </div>
     </div>
