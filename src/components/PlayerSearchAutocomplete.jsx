@@ -7,6 +7,7 @@ const PlayerSearchAutocomplete = ({ players, onPlayerSelect, onSearchSubmit }) =
   const [activeIndex, setActiveIndex] = useState(-1);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
+  const searchUpdateSourceRef = useRef('typing'); // Tracks if searchTerm updated by 'typing' or 'selection'
 
   // Filter players based on search term
   useEffect(() => {
@@ -21,7 +22,17 @@ const PlayerSearchAutocomplete = ({ players, onPlayerSelect, onSearchSubmit }) =
     ).slice(0, 10); // Limit to 10 results for performance
 
     setFilteredPlayers(filtered);
-    setShowDropdown(filtered.length > 0);
+
+    // Only show dropdown if the search term was updated by typing
+    // and there are results. If it was a selection, handleSelectPlayer already closed it.
+    if (searchUpdateSourceRef.current === 'typing') {
+      setShowDropdown(filtered.length > 0);
+    }
+    // After a selection, the ref would be 'selection', so this block is skipped,
+    // respecting setShowDropdown(false) from handleSelectPlayer.
+    // Reset to 'typing' for subsequent input changes.
+    // However, this reset is better done in handleInputChange or when focus is gained and input is empty.
+
     setActiveIndex(-1);
   }, [searchTerm, players]);
 
@@ -44,50 +55,65 @@ const PlayerSearchAutocomplete = ({ players, onPlayerSelect, onSearchSubmit }) =
   const handleKeyDown = (e) => {
     if (!showDropdown) return;
     
-    // Down arrow
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setActiveIndex(prev => 
-        prev < filteredPlayers.length - 1 ? prev + 1 : prev
-      );
-    }
-    // Up arrow
-    else if (e.key === 'ArrowUp') {
+      setActiveIndex(prev => (prev < filteredPlayers.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setActiveIndex(prev => prev > 0 ? prev - 1 : 0);
-    }
-    // Enter
-    else if (e.key === 'Enter' && activeIndex >= 0) {
+      setActiveIndex(prev => (prev > 0 ? prev - 1 : 0));
+    } else if (e.key === 'Enter' && activeIndex >= 0) {
       e.preventDefault();
       handleSelectPlayer(filteredPlayers[activeIndex]);
-    }
-    // Escape
-    else if (e.key === 'Escape') {
+    } else if (e.key === 'Escape') {
       setShowDropdown(false);
     }
   };
 
   const handleInputChange = (e) => {
+    searchUpdateSourceRef.current = 'typing'; // Mark update source as typing
     setSearchTerm(e.target.value);
   };
 
   const handleSelectPlayer = (player) => {
+    searchUpdateSourceRef.current = 'selection'; // Mark update source as selection
     setSearchTerm(player);
-    setShowDropdown(false);
+    setShowDropdown(false); // Close dropdown
+    
+    if (inputRef.current) {
+      inputRef.current.blur(); // Remove focus from input
+    }
     if (onPlayerSelect) {
       onPlayerSelect(player);
     }
   };
 
   const handleGoClick = () => {
+    setShowDropdown(false); // Close dropdown on Go click
+    if (inputRef.current) {
+      inputRef.current.blur(); // Remove focus from input
+    }
     if (onSearchSubmit) {
       onSearchSubmit(searchTerm);
     } else if (searchTerm.trim() !== '') {
-      // If no submission handler provided, select the first filtered player as fallback
       const firstMatch = filteredPlayers[0];
       if (firstMatch) {
+        searchUpdateSourceRef.current = 'selection'; // Treat Go click like a selection if it auto-selects
         handleSelectPlayer(firstMatch);
       }
+    }
+  };
+
+  const handleItemClick = (e, player) => {
+    e.stopPropagation();
+    handleSelectPlayer(player);
+  };
+
+  const handleInputFocus = () => {
+    // When input is focused, if there's text and matches, show dropdown
+    // This is primarily for when user tabs back or clicks into an already populated search
+    searchUpdateSourceRef.current = 'typing'; // Treat focus as if user might start typing
+    if (searchTerm.trim() !== '' && filteredPlayers.length > 0) {
+      setShowDropdown(true);
     }
   };
 
@@ -101,7 +127,7 @@ const PlayerSearchAutocomplete = ({ players, onPlayerSelect, onSearchSubmit }) =
             value={searchTerm}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            onFocus={() => searchTerm.trim() !== '' && setShowDropdown(filteredPlayers.length > 0)}
+            onFocus={handleInputFocus} // Use the refined focus handler
             placeholder="Search for a player..."
             className="w-full bg-gray-900 text-white border border-gray-700 rounded-l-lg py-2 px-4 pl-10 focus:outline-none focus:border-red-500 transition-colors"
           />
@@ -129,7 +155,7 @@ const PlayerSearchAutocomplete = ({ players, onPlayerSelect, onSearchSubmit }) =
               <li 
                 key={index}
                 className={`px-4 py-2 cursor-pointer hover:bg-gray-700 ${activeIndex === index ? 'bg-gray-700' : ''}`}
-                onClick={() => handleSelectPlayer(player)}
+                onClick={(e) => handleItemClick(e, player)} // Still using handleItemClick
                 onMouseEnter={() => setActiveIndex(index)}
               >
                 <span className="text-white">{player}</span>
