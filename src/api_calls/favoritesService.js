@@ -9,7 +9,7 @@ const local_API_BASE_URL = 'http://localhost:5001';
  */
 export const getFavorites = async (token) => {
   try {
-    const response = await fetch(`${local_API_BASE_URL}/api/favorites`, {
+    const response = await fetch(`${API_BASE_URL}/api/favorites`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -40,7 +40,7 @@ export const checkFavoriteStatus = async (playerName, token) => {
     // Encode the player name to handle special characters in URLs
     const encodedName = encodeURIComponent(playerName);
     
-    const response = await fetch(`${local_API_BASE_URL}/api/favorites/check/${encodedName}`, {
+    const response = await fetch(`${API_BASE_URL}/api/favorites/check/${encodedName}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -68,7 +68,7 @@ export const checkFavoriteStatus = async (playerName, token) => {
  */
 export const addToFavorites = async (playerName, token) => {
   try {
-    const response = await fetch(`${local_API_BASE_URL}/api/favorites`, {
+    const response = await fetch(`${API_BASE_URL}/api/favorites`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export const removeFromFavorites = async (playerName, token) => {
     // Encode the player name to handle special characters in URLs
     const encodedName = encodeURIComponent(playerName);
     
-    const response = await fetch(`${local_API_BASE_URL}/api/favorites/${encodedName}`, {
+    const response = await fetch(`${API_BASE_URL}/api/favorites/${encodedName}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
