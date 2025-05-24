@@ -3,6 +3,7 @@ import FavSearch from '../components/fav_search';
 import FavoritePlayerCard from '../components/FavoritePlayerCard';
 import { useAuth } from '../context/AuthContext';
 import { getFavorites } from '../api_calls/favoritesService';
+import { getPlayerStats } from '../api_calls/stats';
 
 const Favorites = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,13 +27,50 @@ const Favorites = () => {
         setError(null);
         const favorites = await getFavorites(token);
         
-        // Map favorites to the format expected by FavoritePlayerCard
-        const formattedFavorites = favorites.map(fav => ({
-          PLAYER_NAME: fav.playerName,
+        if (!favorites || favorites.length === 0) {
+          setFavoritePlayers([]);
+          setIsLoading(false);
+          return;
+        }
 
-        }));
-        
-        setFavoritePlayers(formattedFavorites);
+        // Create an array to track all fetch promises
+        const playerDataPromises = favorites.map(async (fav) => {
+          try {
+            // Get stats for each player
+            const playerStats = await getPlayerStats(fav.playerName);
+            
+            console.log(`Stats for ${fav.playerName}:`, playerStats);
+            
+            // The actual structure is just the stats object directly, not nested under a 'stats' property
+            return {
+              PLAYER_NAME: fav.playerName,
+              GAME_DATE: playerStats?.GAME_DATE || 'N/A',
+              PTS: playerStats?.PTS || 'N/A', 
+              PTS_AVG_LAST_5_USER: playerStats?.PTS_AVG_LAST_5_USER || 'N/A',
+              MIN: playerStats?.MIN || 'N/A',
+              addedAt: fav.addedAt,
+              // Include other stats you might want to display
+              fullStats: playerStats || {}
+            };
+          } catch (err) {
+            console.error(`Error fetching stats for ${fav.playerName}:`, err);
+            // Return a partial player object if stats fetch fails
+            return {
+              PLAYER_NAME: fav.playerName,
+              GAME_DATE: 'Error loading',
+              PTS: 'N/A',
+              PTS_AVG_LAST_5_USER: 'N/A',
+              MIN: 'N/A',
+              addedAt: fav.addedAt,
+              error: true
+            };
+          }
+        });
+
+        // Wait for all player stats to be fetched
+        const playerDataResults = await Promise.all(playerDataPromises);
+        console.log("All player data results:", playerDataResults);
+        setFavoritePlayers(playerDataResults);
       } catch (err) {
         console.error('Error fetching favorites:', err);
         setError('Failed to load favorites. Please try again later.');
@@ -81,7 +119,7 @@ const Favorites = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredPlayers.map((player, index) => (
           <FavoritePlayerCard 
             key={player.PLAYER_NAME}
