@@ -1,6 +1,15 @@
 import React from 'react';
+import PlayerStatsDisplayCard from './PlayerStatsDisplayCard';
 
-const FavoritePlayerCard = ({ player, index, isLoaded }) => {
+const FavoritePlayerCard = ({ 
+  player, 
+  index, 
+  isLoaded, 
+  showFullStats,
+  onViewFullStats,
+  onBackToCards,
+  onPlayerUnfavorited
+}) => {
   // Format the game date
   const formatDate = (dateString) => {
     if (dateString === 'N/A' || dateString === 'Error loading') return dateString;
@@ -22,6 +31,53 @@ const FavoritePlayerCard = ({ player, index, isLoaded }) => {
     return value.toFixed(1);
   };
 
+  // Handle view full stats button click
+  const handleViewFullStats = () => {
+    onViewFullStats(player.PLAYER_NAME);
+  };
+
+  // Handle when player is unfavorited
+  const handleUnfavorited = () => {
+    if (onPlayerUnfavorited) {
+      onPlayerUnfavorited(player.PLAYER_NAME);
+    }
+  };
+
+  // If detailed view is shown, render the PlayerStatsDisplayCard
+  if (showFullStats) {
+    return (
+      <div className="w-full transition-all duration-500 ease-in-out">
+        <div className="bg-gray-900 rounded-lg p-4 shadow-lg animate-fadeIn">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-white">{player.PLAYER_NAME}</h2>
+            <div className="flex items-center space-x-3">
+              {player.isFavorited === false && (
+                <span className="text-xs bg-red-900/30 text-red-300 px-2 py-1 rounded">
+                  Removed from favorites
+                </span>
+              )}
+              <button 
+                onClick={onBackToCards}
+                className="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-white text-sm rounded-full transition-colors"
+              >
+                Back to All Players
+              </button>
+            </div>
+          </div>
+          <div className="animate-slideUpFade">
+            <PlayerStatsDisplayCard 
+              playerData={player.fullStats} 
+              playerName={player.PLAYER_NAME}
+              onUnfavorited={handleUnfavorited}
+              isFavorited={player.isFavorited !== false}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Otherwise, render the compact card
   return (
     <div 
       className={`
@@ -29,6 +85,7 @@ const FavoritePlayerCard = ({ player, index, isLoaded }) => {
         hover:shadow-red-900/20 transition-all duration-500 transform
         ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
         ${player.error ? 'border-red-800/50' : ''}
+        animate-fadeIn
       `}
       style={{ 
         transitionDelay: `${80 + (index * 120)}ms`,
@@ -69,6 +126,14 @@ const FavoritePlayerCard = ({ player, index, isLoaded }) => {
             <span className="text-lg font-bold text-red-400">{formatStat(player.PTS_AVG_LAST_5_USER)}</span>
           </div>
         </div>
+
+        {/* See More Button */}
+        <button
+          onClick={handleViewFullStats}
+          className="w-full mt-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded transition-colors text-sm font-medium transform hover:scale-[1.02] active:scale-[0.98] duration-200"
+        >
+          See Full Stats
+        </button>
       </div>
     </div>
   );

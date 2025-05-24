@@ -14,13 +14,19 @@ const StatBlockItem = ({ label, value, unit = '' }) => {
   );
 };
 
-const PlayerStatsDisplayCard = ({ playerData, playerName }) => {
+const PlayerStatsDisplayCard = ({ playerData, playerName, onUnfavorited, isFavorited }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated, token } = useAuth();
   
   useEffect(() => {
-    // Check if player is favorited when the component mounts or playerName changes
+    // If isFavorited prop is explicitly provided, use that value
+    if (isFavorited !== undefined) {
+      setIsFavorite(isFavorited);
+      return;
+    }
+    
+    // Otherwise check with the API (for backward compatibility)
     const checkIfFavorite = async () => {
       // Only check favorite status if user is logged in and playerName exists
       if (isAuthenticated && token && playerName) {
@@ -38,7 +44,7 @@ const PlayerStatsDisplayCard = ({ playerData, playerName }) => {
     };
     
     checkIfFavorite();
-  }, [playerName, isAuthenticated, token]);
+  }, [playerName, isAuthenticated, token, isFavorited]);
   
   if (!playerData) {
     return null;
@@ -56,6 +62,11 @@ const PlayerStatsDisplayCard = ({ playerData, playerName }) => {
       // Toggle favorite status through API
       const newStatus = await toggleFavorite(playerName, isFavorite, token);
       setIsFavorite(newStatus);
+      
+      // If the player was unfavorited and we have a callback, notify the parent component
+      if (isFavorite && !newStatus && onUnfavorited) {
+        onUnfavorited(playerName);
+      }
     } catch (error) {
       console.error("Error toggling favorite:", error);
       alert("Failed to update favorite. Please try again.");
