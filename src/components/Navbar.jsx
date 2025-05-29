@@ -25,7 +25,7 @@ const Navbar = () => {
     { path: '/home_page', text: 'Home' },
     { path: '/search_page', text: 'Search Player' },
     { path: '/favorites', text: 'Favorites' },
-    { path: '/feature3_user', text: 'Predict' },
+    { path: '/predict_page', text: 'Predict' },
     { path: '/about', text: 'About' },
   ];
 

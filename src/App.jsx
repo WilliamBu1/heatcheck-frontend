@@ -10,6 +10,7 @@ import Favorites from './pages/favorites';
 import AppLayout from './layouts/AppLayout';
 import MainLayout from './layouts/MainLayout';
 import Search_player from './pages/search_page';
+import Predict_page from './pages/predict_page';
 
 import React from 'react'
 
@@ -25,6 +26,7 @@ const App = () => {
             <Route path='/about' element={<About />} />
             <Route path='/favorites' element={<Favorites />} />
             <Route path='/search_page' element={<Search_player />} />
+            <Route path='/predict_page' element={<Predict_page />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
