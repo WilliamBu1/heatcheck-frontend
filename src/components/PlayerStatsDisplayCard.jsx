@@ -107,8 +107,6 @@ const PlayerStatsDisplayCard = ({ playerData, playerName, onUnfavorited, isFavor
         'en-US',
         { year: 'numeric', month: 'short', day: 'numeric' }
       );
-    }
-
     } else if (key === 'FG_PCT') {
       displayValue = typeof rawValue === 'number' ? (rawValue * 100).toFixed(1) : 'N/A';
       unit = '%';
