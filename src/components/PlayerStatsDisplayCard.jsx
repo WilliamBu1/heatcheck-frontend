@@ -98,7 +98,17 @@ const PlayerStatsDisplayCard = ({ playerData, playerName, onUnfavorited, isFavor
     let unit = '';
 
     if (key === 'GAME_DATE') {
-      displayValue = new Date(rawValue).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      // Option 1: Keep the YYYY-MM-DD string exactly as API gives it
+      displayValue = rawValue;  
+    
+      // Option 2: Pretty-print without timezone shift
+      const [year, month, day] = rawValue.split("-");
+      displayValue = new Date(Number(year), Number(month) - 1, Number(day)).toLocaleDateString(
+        'en-US',
+        { year: 'numeric', month: 'short', day: 'numeric' }
+      );
+    }
+
     } else if (key === 'FG_PCT') {
       displayValue = typeof rawValue === 'number' ? (rawValue * 100).toFixed(1) : 'N/A';
       unit = '%';
