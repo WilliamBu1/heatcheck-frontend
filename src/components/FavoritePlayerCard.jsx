@@ -11,19 +11,18 @@ const FavoritePlayerCard = ({
   onPlayerUnfavorited
 }) => {
   // Format the game date
-  const formatDate = (dateString) => {
-    if (dateString === 'N/A' || dateString === 'Error loading') return dateString;
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
-      });
-    } catch (error) {
-      return 'Invalid date';
-    }
-  };
+const formatDate = (dateString) => {
+  if (!dateString || dateString === 'N/A' || dateString === 'Error loading') return dateString;
+  const [year, month, day] = dateString.split('-');
+  return new Date(Number(year), Number(month) - 1, Number(day))
+    .toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+};
+
+
 
   // Format number stats (with decimal points)
   const formatStat = (value) => {
